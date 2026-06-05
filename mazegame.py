@@ -69,3 +69,4 @@ def maze_game_initializer():
 
 
 maze_game_initializer()
+initalizing check()
