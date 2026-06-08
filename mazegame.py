@@ -1,3 +1,4 @@
+import random
 def Maze():
     return [
         list("##########"),
@@ -6,7 +7,7 @@ def Maze():
         list("# ######E#"),
         list("# T##### #"),
         list("#        #"),
-        list("# #####T #"),
+        list("#K#####T #"),
         list("##########")
     ]
 
@@ -19,7 +20,6 @@ def wall(maze, new_row, new_col):
         print("you hit a wall")
         return True
     return False
-
 
 def move(maze, player_row, player_col, move_count,life_count):
     while True:
@@ -47,45 +47,78 @@ def move(maze, player_row, player_col, move_count,life_count):
             maze[player_row][player_col]=" "
             if maze[new_row][new_col]!="E":
                 if maze[new_row][new_col]!="T":
-                    maze[new_row][new_col]="p"
-                    return new_row, new_col, move_count,life_count
+                    if maze[new_row][new_col]!="K":
+                        maze[new_row][new_col]="p"
+                        player_row=new_row
+                        player_col=new_col
+                        return player_row, player_col, move_count,life_count
 
             if maze[new_row][new_col]=="T":
                 life_count-=1
                 print(f"Its a trap!, life remaining= {life_count}")
                 maze[player_row][player_col]="P"
                 return player_row,player_col,move_count,life_count 
+            
+            if maze[new_row][new_col]=="K":
+                player_row= new_row
+                player_col= new_col
+                return player_row,player_col,move_count,life_count
 
 
             if maze[new_row][new_col]=="E":
                 player_row=new_row
                 player_col=new_col
                 return player_row, player_col, move_count,life_count
-           
-        
+                    
+def key(maze,player_row,player_col):
+    if maze[player_row][player_col]=="K":
+        return "complete"
+    return None
 
 
-def win(maze,player_row, player_col):
-    if maze[player_row][player_col] == "E":
+def win(maze,player_row, player_col,mission):
+    if maze[player_row][player_col] == "E" and mission!="complete":
+        print("You need a key to exit")
+        return False
+    if mission == "complete" and maze[player_row][player_col] == "E":
         return True
     return False
         
+        
+def lose(maze,move_count, life_count):
+    if move_count==0:
+        return True
+    if life_count==0:
+        return True
+    return False
+
+def enemy():
+    pass
 
 def maze_game_initializer():
     maze=Maze()
     player_row, player_col = 1,1
-    move_count=15
+    move_count=17
     life_count=4
+    mission="incomplete"
 
     while True:
         print_maze(maze)
         player_row, player_col,move_count,life_count = move(maze, player_row, player_col,move_count,life_count)
-        if win(maze,player_row, player_col):
+        result=key(maze,player_row, player_col)
+        print(mission)
+        if result:
+            mission = result
+        
+        if mission == "complete":
+            print("you got a key")
+
+        if lose(maze, move_count, life_count):
+            print("You lose")
+            break
+
+        if win(maze,player_row,player_col,mission):
             print("you win")
             break
 
-        
-
-
 maze_game_initializer()
-
