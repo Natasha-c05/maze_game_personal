@@ -69,6 +69,10 @@ def move(maze, player_row, player_col, move_count,life_count):
                 player_row=new_row
                 player_col=new_col
                 return player_row, player_col, move_count,life_count
+            
+            if maze[new_row][new_col]=="M":
+                life_count=0
+                return player_row, player_col, move_count,life_count
                     
 def key(maze,player_row,player_col):
     if maze[player_row][player_col]=="K":
@@ -92,8 +96,20 @@ def lose(maze,move_count, life_count):
         return True
     return False
 
-def enemy():
-    pass
+def enemy(maze):  
+    while True:
+        
+        random_row= random.randint(2,5)
+        random_col=random.randint(2,8)
+        if maze[random_row][random_col]!="#":
+            enemypos=maze[random_row][random_col]="M"
+            return enemypos
+    
+def reset(maze):
+    enemypos=" "
+    return enemypos
+        
+
 
 def maze_game_initializer():
     maze=Maze()
@@ -101,9 +117,12 @@ def maze_game_initializer():
     move_count=17
     life_count=4
     mission="incomplete"
+    enemy(maze)
 
     while True:
         print_maze(maze)
+        enemy(maze)
+
         player_row, player_col,move_count,life_count = move(maze, player_row, player_col,move_count,life_count)
         result=key(maze,player_row, player_col)
         print(mission)
@@ -120,5 +139,7 @@ def maze_game_initializer():
         if win(maze,player_row,player_col,mission):
             print("you win")
             break
+        reset(maze)
+        
 
 maze_game_initializer()
