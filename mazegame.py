@@ -72,7 +72,6 @@ def move(maze, player_row, player_col, move_count,life_count):
             
             if maze[new_row][new_col]=="M":
                 life_count=0
-                
                 return player_row, player_col, move_count,life_count
                     
 def key(maze,player_row,player_col):
@@ -97,22 +96,16 @@ def lose(maze,move_count, life_count):
         return True
     return False
 
-def enemy(maze):  
-    random_row= random.randint(2,5)
-    random_col=random.randint(2,8)
-    if maze[random_row][random_col]!="#":
-        maze[random_row][random_col]="M"
-    return random_row, random_col
-        
-        
-
-        
-     
-def reset(maze,random_row,random_col):
-     if maze[random_row][random_col]=="M":
-        maze[random_row][random_col]=" "
-        return random_row, random_col
-        
+def enemy(maze, enemy_row, enemy_col):  
+    if enemy_row is not None and enemy_col is not None:
+        maze[enemy_row][enemy_col] = " "
+    
+    while True:
+        random_row= random.randint(2,5)
+        random_col=random.randint(2,8)
+        if maze[random_row][random_col]==" ":
+            maze[random_row][random_col]="M"
+            return random_row, random_col
 
 
 def maze_game_initializer():
@@ -121,18 +114,21 @@ def maze_game_initializer():
     move_count=17
     life_count=4
     mission="incomplete"
-    random_row= random.randint(2,5)
-    random_col=random.randint(2,8)
+    enemy_row=None
+    enemy_col=None
+    move_counter=0
 
     while True:
         print_maze(maze)
-        random_row= random.randint(2,5)
-        random_col=random.randint(2,8)
-        enemy(maze)
-
         player_row, player_col,move_count,life_count = move(maze, player_row, player_col,move_count,life_count)
         
-        reset(maze,random_row,random_col)
+        move_counter += 1
+
+        if move_counter % 2 == 0:
+            enemy_row, enemy_col = enemy(maze, enemy_row, enemy_col)
+
+        print(life_count)
+
 
         result=key(maze,player_row, player_col)
 
@@ -152,3 +148,6 @@ def maze_game_initializer():
         
 
 maze_game_initializer()
+
+
+
