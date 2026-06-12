@@ -48,10 +48,11 @@ def move(maze, player_row, player_col, move_count,life_count):
             if maze[new_row][new_col]!="E":
                 if maze[new_row][new_col]!="T":
                     if maze[new_row][new_col]!="K":
-                        maze[new_row][new_col]="p"
-                        player_row=new_row
-                        player_col=new_col
-                        return player_row, player_col, move_count,life_count
+                        if maze[new_row][new_col]!="M":
+                            maze[new_row][new_col]="p"
+                            player_row=new_row
+                            player_col=new_col
+                            return player_row, player_col, move_count,life_count
 
             if maze[new_row][new_col]=="T":
                 life_count-=1
@@ -129,6 +130,10 @@ def maze_game_initializer():
 
         print(life_count)
 
+        if lose(maze, move_count, life_count):
+            print("You lose")
+            break
+
 
         result=key(maze,player_row, player_col)
 
@@ -138,9 +143,7 @@ def maze_game_initializer():
         if mission == "complete":
             print("you got a key")
 
-        if lose(maze, move_count, life_count):
-            print("You lose")
-            break
+        
 
         if win(maze,player_row,player_col,mission):
             print("you win")
